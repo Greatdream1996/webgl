@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <!-- 顶点着色器 描述图形点位-->
+    <script id="vertexShader" type="x-shader/x-vertex">
+      attribute vec4 a_Position;
+      attribute float a_PointSize;
+      void main(){
+        gl_Position = a_Position;
+        gl_PointSize = a_PointSize;
+      }
+    </script>
+    <!-- 片元着色器 描述图形颜色-->
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      precision mediump float;
+      uniform vec4 u_FragColor;
+      void main(){
+        float dist = distance(gl_PointCoord,vec2(0.5,0.5));
+        if(dist < 0.5){
+          gl_FragColor = u_FragColor;
+        }else{
+          discard;
+        }
+        gl_FragColor = u_FragColor;
+      }
+    </script>
+    <script type="module">
+      import { initShader, getPosByMouse } from './js/initShader.js'
+      import Compose from './js/Compose.js'
+      import Track from './js/Track.js'
+      // init canvas in webgl
+      const canvas = document.querySelector('#canvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      const gl = canvas.getContext('webgl')
+      gl.enable(gl.BLEND)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
+      // 拿到顶点着色器和片元着色器文本
+      const vsScource = document.querySelector('#vertexShader').innerText
+      const fsScource = document.querySelector('#fragmentShader').innerText
+
+      // 初始化着色器对象，实践glsl和js通信
+      initShader(gl, vsScource, fsScource)
+
+      // 建立glsl顶点着色器与js变量连接
+      const a_Position = gl.getAttribLocation(gl.program, 'a_Position')
+      const a_PointSize = gl.getAttribLocation(gl.program, 'a_PointSize')
+      // 建立glsl片元着色器与js变量链接
+      const u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
+
+      // 设置颜色
+      gl.clearColor(0, 0, 0, 1)
+
+      // 顶点集合
+      const a_points = []
+
+      const compose = new Compose()
+      const stars = []
+      render()
+      // 鼠标点击事件 获取点击当前canvas中webgl的位置，将canvas坐标转换成webgl坐标
+      canvas.addEventListener('click', (event) => {
+        const { x, y } = getPosByMouse(event, canvas)
+
+        const a = 1
+        const s = Math.random() * 50 + 2
+        const obj = { x, y, s, a, color: { r: Math.random(), g: Math.random(), b: Math.random(), a: 1.0 } }
+        stars.push(obj)
+
+        const track = new Track(obj)
+        track.start = new Date()
+        track.keyMap = new Map([
+          [
+            'a',
+            [
+              [500, a],
+              [1000, 0],
+              [1500, a]
+            ]
+          ]
+        ])
+        track.timeLen = 2000
+        track.loop = true
+        compose.add(track)
+      })
+      !(function ani() {
+        compose.update(new Date())
+
+        render()
+        requestAnimationFrame(ani)
+      })()
+      // 渲染函数
+      function render() {
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        stars.forEach(({ x, y, s, a, color: { r, g, b } }) => {
+          gl.vertexAttrib2f(a_Position, x, y)
+          gl.vertexAttrib1f(a_PointSize, s)
+          const arr = new Float32Array([r, g, b, a])
+          gl.uniform4fv(u_FragColor, arr)
+          gl.drawArrays(gl.POINTS, 0, 1)
+        })
+      }
+    </script>
+  </body>
+</html>

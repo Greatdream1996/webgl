@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <!-- 顶点着色器 描述图形点位-->
+    <script id="vertexShader" type="x-shader/x-vertex">
+      attribute vec4 a_Position;
+      attribute float a_PointSize;
+      void main(){
+        gl_Position = a_Position;
+        gl_PointSize = a_PointSize;
+      }
+    </script>
+    <!-- 片元着色器 描述图形颜色-->
+    <script id="fragmentShader" type="x-shader/x-fragment">
+      void main(){
+        gl_FragColor = vec4(1,1,0,1);
+      }
+    </script>
+    <script type="module">
+      import { initShader } from './js/initShader.js'
+      // init canvas in webgl
+      const canvas = document.querySelector('#canvas')
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      const gl = canvas.getContext('webgl')
+
+      // 拿到顶点着色器和片元着色器文本
+      const vsScource = document.querySelector('#vertexShader').innerText
+      const fsScource = document.querySelector('#fragmentShader').innerText
+
+      // 初始化着色器对象，实践glsl和js通信
+      initShader(gl, vsScource, fsScource)
+
+      // 建立glsl顶点着色器与js变量连接
+      const a_Position = gl.getAttribLocation(gl.program, 'a_Position')
+      const a_PointSize = gl.getAttribLocation(gl.program, 'a_PointSize')
+      // 设置颜色
+      gl.clearColor(0, 0, 0, 1)
+
+      // 顶点集合
+      const a_points = []
+
+      render()
+
+      // 鼠标点击事件 获取点击当前canvas中webgl的位置，将canvas坐标转换成webgl坐标
+      canvas.addEventListener('click', ({ clientX, clientY }) => {
+        const { left, top, width, height } = canvas.getBoundingClientRect()
+        const [cssX, cssY] = [clientX - left, clientY - top]
+        // 解决差异
+        const [halfWidth, halfHeight] = [width / 2, height / 2]
+        const [xBaseCenter, yBaseCenter] = [cssX - halfWidth, cssY - halfHeight]
+        // 解决canvas Y轴差异
+        const yBaseCenterTop = -yBaseCenter
+        // 解决基底差异
+        const [x, y] = [xBaseCenter / halfWidth, yBaseCenterTop / halfHeight]
+        const size = Math.random() * 50 + 10
+        a_points.push({ x, y, size })
+        render()
+      })
+      // 渲染函数
+      function render() {
+        gl.clear(gl.COLOR_BUFFER_BIT)
+        a_points.forEach(({ x, y, size }) => {
+          gl.vertexAttrib2f(a_Position, x, y)
+          gl.vertexAttrib1f(a_PointSize, size)
+          gl.drawArrays(gl.POINTS, 0, 1)
+        })
+      }
+    </script>
+  </body>
+</html>
