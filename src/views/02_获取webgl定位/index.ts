@@ -1,7 +1,7 @@
 import fragment from './glsl/fragment.glsl'
 import vertex from './glsl/vertex.glsl'
 
-import { initShader } from 'common/initShader'
+import { initShader } from '@common/initShader'
 // init canvas in webgl
 const canvas = document.querySelector('#canvas') as HTMLElementExpansion
 canvas.width = window.innerWidth

@@ -1,4 +1,4 @@
-import { initShader } from '../../common/initShader'
+import { initShader } from '@common/initShader'
 import fragment from './glsl/fragment.glsl'
 import vertex from './glsl/vertex.glsl'
 // init canvas in webgl

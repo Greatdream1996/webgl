@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "@": ["src/*"],
-      "view": ["src/views/*"],
-      "@common": ["src/common/*"]
+      "@common/*": ["src/common/*"]
     },
     "outDir": "./dist/",
     "noImplicitAny": true,

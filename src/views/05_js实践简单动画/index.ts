@@ -1,6 +1,7 @@
-import { initShader, getPosByMouse } from '../../common/initShader'
-import Compose from '../../common/Compose'
-import Track from '../../common/Track'
+import { initShader, getPosByMouse } from '@common/initShader'
+import Compose from '@common/Compose'
+import Track from '@common/Track'
+import test from '@common/test'
 import fragment from './glsl/fragment.glsl'
 import vertex from './glsl/vertex.glsl' // init canvas in webgl
 const canvas = document.querySelector('#canvas') as HTMLElementExpansion
@@ -9,6 +10,7 @@ canvas.height = window.innerHeight
 const gl = canvas.getContext('webgl')
 gl.enable(gl.BLEND)
 gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+console.log(test)
 
 // 拿到顶点着色器和片元着色器文本
 const vsScource = vertex
