@@ -14,7 +14,7 @@ export function initShader(gl, vsScource, fsScource) {
   gl.useProgram(program)
   // 挂载到上下文
   gl.program = program
-  return true
+  return program
 }
 
 function loadShader(gl, type, source) {

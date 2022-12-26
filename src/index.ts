@@ -1,4 +1,7 @@
 // import './views/02_获取webgl定位/index'
 // import './views/03_js控制顶点着色器/index'
 // import './views/04_js控制片元着色器/index'
-import './views/05_js实践简单动画/index'
+// import './views/05_js实践简单动画/index'
+// import './views/06_绘制点线面/index'
+// import './views/07_图形封装/index'
+import './views/08_鼠标绘制多线条/index'
