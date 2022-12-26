@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@": ["src/*"],
+      "view": ["src/views/*"],
+      "@common": ["src/common/*"]
+    },
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "noUnusedLocals": false, // 解决导入未使用报错
+    "lib": ["DOM"]
+  }
+}
