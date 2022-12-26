@@ -32,7 +32,7 @@ function getValBetweenFms(time, fms, last) {
   for (let i = 0; i < last; i++) {
     const fm1 = fms[i]
     const fm2 = fms[i + 1]
-    if (time >= fms[0] && time <= fm2[0]) {
+    if (time >= fm1[0] && time <= fm2[0]) {
       const delta = {
         x: fm2[0] - fm1[0],
         y: fm2[1] - fm1[1]

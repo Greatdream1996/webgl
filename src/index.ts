@@ -4,4 +4,5 @@
 // import './views/05_js实践简单动画/index'
 // import './views/06_绘制点线面/index'
 // import './views/07_图形封装/index'
-import './views/08_鼠标绘制多线条/index'
+// import './views/08_鼠标绘制多线条/index'
+import './views/09_狮子座案例/index'
